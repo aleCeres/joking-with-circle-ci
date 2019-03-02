@@ -1,0 +1,29 @@
+{
+  "name": "joking-with-circle-ci",
+  "version": "1.0.0",
+  "description": "Circle ci its amazing",
+  "main": "index.js",
+  "repository": "https://github.com/aleCeres/joking-with-circle-ci.git",
+  "author": "Alessandro Cerasino <alessandro.cerasino@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.2",
+    "eslint": "^5.14.1",
+    "eslint-plugin-jest": "^22.3.0",
+    "jest": "^23.5.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
+}
