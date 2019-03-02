@@ -24,6 +24,7 @@
     "collectCoverage": true
   },
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "sinon": "^7.2.6"
   }
 }
