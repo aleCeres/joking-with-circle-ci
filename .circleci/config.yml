@@ -32,7 +32,7 @@ orbs:
         executor: node_10
         steps:
           - codecov/upload:
-              file: ./coverage
+              file: ../coverage
 
 workflows:
   main:
