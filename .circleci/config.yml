@@ -33,7 +33,7 @@ orbs:
         steps:
           - test-node-10
           - codecov/upload:
-              file: ../coverage/
+              file: coverage/*.json
 
 workflows:
   main:
