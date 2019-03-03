@@ -4,7 +4,7 @@ description: Creating an orb to build test and  coverage upload
 orbs:
   my-orb:
     orbs:
-      codecov: codecov/codecov@1.0.2
+      codecov: codecov/codecov@1.0.4
     executors:
       node_10:
         docker:
@@ -28,7 +28,7 @@ orbs:
         steps:
           - build
           - test-node-10
-      coverage:
+      upload_coverage_report:
         executor: node_10
         steps:
           - codecov/upload:
@@ -38,6 +38,4 @@ workflows:
   main:
     jobs:
       - my-orb/build_test
-      - my-orb/coverage:
-          requires:
-            - my-orb/build_test
+      - my-orb/upload_coverage_report
