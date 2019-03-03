@@ -38,4 +38,6 @@ workflows:
   main:
     jobs:
       - my-orb/build_test
-      - my-orb/upload_coverage_report
+      - my-orb/upload_coverage_report:
+          requires:
+           - my-orb/build_test
