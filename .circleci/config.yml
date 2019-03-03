@@ -1,90 +1,43 @@
-aliases:
-  - &restore-cache
-    keys:
-      - v2-dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      # Fallback in case checksum fails
-      - v2-dependencies-{{ .Branch }}-
-  - &save-cache
-    paths:
-      - node_modules
-    key: v2-dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
+version: 2.1
+description: Creating an orb to build test and  coverage upload
 
-version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/node:6
-    steps:
-      - run: echo docker build with dockerfile...
-  test-node-6:
-    docker:
-      - image: circleci/node:6
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress --frozen-lockfile --ignore-engines
-      - save-cache: *save-cache
-      - run:
-          command: yarn test
+orbs:
+  my-orb:
+    orbs:
+      codecov: codecov/codecov@1.0.2
+    executors:
+      node_10:
+        docker:
+        - image: circleci/node:10    
+    commands:
+      build:
+        steps:
+         - checkout
+         - run: yarn --no-progress --frozen-lockfile
+      test-node-10:
+        steps:
+          - checkout
+          # - restore-cache: *restore-cache
+          - run: yarn --no-progress --frozen-lockfile
+          # - save-cache: *save-cache
+          - run: yarn test
 
-  test-node-8:
-    docker:
-      - image: circleci/node:8
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress --frozen-lockfile
-      - save-cache: *save-cache
-      - run:
-          command: yarn test
-
-  test-node-10:
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress --frozen-lockfile
-      - save-cache: *save-cache
-      - run:
-          command: yarn test
-
-  test-node-11:
-    docker:
-      - image: circleci/node:11
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress --frozen-lockfile
-      - save-cache: *save-cache
-      - run:
-          command: yarn test
-  deploy:
-    docker:
-      - image: circleci/node:6
-    steps:
-      - run: echo docker push on aws container.
+    jobs:
+      build_test:
+        executor: node_10
+        steps:
+          - build
+          - test-node-10
+      coverage:
+        executor: node_10
+        steps:
+          - codecov/upload:
+              file: ./coverage
 
 workflows:
-  version: 2
-  build_test_deploy:
+  main:
     jobs:
-      - build
-      - test-node-6:
+      - my-orb/build_test
+      - my-orb/coverage:
           requires:
-            - build
-      - test-node-8:
-          requires:
-            - build
-      - test-node-10:
-          requires:
-            - build
-      - test-node-11:
-          requires:
-            - build
-      - deploy:
-          requires:
-            - test-node-6
-            - test-node-8
-            - test-node-10
-            - test-node-11
+            - my-orb/build_test
