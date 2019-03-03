@@ -31,7 +31,7 @@ orbs:
       upload_coverage_report:
         executor: node_10
         steps:
-          - run: echo ls -la
+          - run: ls -la
           - codecov/upload:
               file: ../coverage
 
